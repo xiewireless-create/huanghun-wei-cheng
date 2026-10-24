@@ -1,0 +1,61 @@
+<title>黄昏围城</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="黄昏恋互动叙事游戏：母女双视角，体验老年人再爱一次要过的几道关。">
+<style>/*FONTS*/</style>
+<style>/*STYLE*/</style>
+
+<div id="stage">
+  <div id="ambient"></div>
+  <div id="frame">
+    <img id="bgA" class="bg" alt="">
+    <img id="bgB" class="bg" alt="">
+    <div id="veil"></div>
+  </div>
+  <div id="pov" hidden></div>
+  <div id="call" hidden><span class="dot"></span><span class="p"></span><span class="t">00:00</span></div>
+  <div id="phone" hidden><header><span class="orn" aria-hidden="true"></span><span class="peer"></span><span class="orn" aria-hidden="true"></span></header><div class="msgs"></div><div class="hint">点击空白处继续 · 点语音条可重听</div></div>
+  <div id="explore" hidden><div id="exbar"></div></div>
+  <div id="btnwrap" hidden></div>
+</div>
+
+<div id="hud">
+  <div id="dlg" class="dlg" hidden>
+    <div class="who"><i class="clip" aria-hidden="true"></i><span class="nm"></span></div>
+    <div class="txt"></div>
+    <div class="next" aria-hidden="true"></div>
+  </div>
+</div>
+
+<div id="choice" hidden></div>
+
+<div id="title" class="page">
+  <div class="split">
+    <button class="side" data-line="mom"><span class="done" hidden>已通关</span><span class="nm"></span><span class="mt"></span><span class="go">进入老人视角 →</span></button>
+    <button class="side" data-line="dau"><span class="done" hidden>已通关</span><span class="nm"></span><span class="mt"></span><span class="go">进入子女视角 →</span></button>
+  </div>
+  <div class="head"><h1></h1><p></p><p class="syn"></p><span class="pick">请选择你的身份</span></div>
+  <div class="rotate">横屏游玩，画面更完整</div>
+  <button class="synbtn" type="button">故事简介</button>
+  <button class="cont" type="button" hidden></button>
+</div>
+
+<div id="page" class="page" hidden></div>
+
+<div id="bar" hidden>
+  <button id="b-snd" type="button">声音：开</button>
+  <button id="b-memo" type="button">回忆</button>
+  <button id="b-log" type="button">回看</button>
+  <button id="b-home" type="button">标题</button>
+</div>
+
+<div id="obj" class="modal" hidden></div>
+<div id="memo" hidden><aside class="drawer" aria-label="回忆"><header><div><h2>回忆</h2><p>每一次选择都自动存了档。点「回到这里重选」，换一句话试试。</p></div><button class="close" type="button">关闭</button></header><div class="thread"></div></aside></div>
+<div id="toast" hidden></div>
+<div id="ffveil" hidden><span>正在回到那个时刻……</span></div>
+<div id="log" class="modal" hidden><div class="sheet"><header><span>回看</span><button data-close type="button">关闭</button></header><div class="lines"></div></div></div>
+<div id="confirm" class="modal" hidden><div class="leaflet"><h3>回到标题页？</h3><p>这一周目的进度不会保留。</p><div class="row"><button class="btn-go" data-yes type="button">回到标题</button><button class="btn-ghost" data-no type="button" style="color:#2a1d14;border-color:#cdb894">继续游玩</button></div></div></div>
+
+<script>/*MANIFEST*/</script>
+<script>/*STORY*/</script>
+<script>/*PREP*/</script>
+<script>/*ENGINE*/</script>
