@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 
-const url = pathToFileURL(path.resolve(__dirname, '..', 'index.html')).href;
+const url = process.env.TARGET_URL || pathToFileURL(path.resolve(__dirname, '..', 'index.html')).href;
 const chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 (async () => {
@@ -11,8 +11,7 @@ const chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
   async function open(name, width, height) {
     const page = await browser.newPage({ viewport: { width, height } });
-    await page.goto(url);
-    await page.waitForLoadState('load');
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForTimeout(1400);
     await page.screenshot({ path: `/private/tmp/huanghun-${name}.png` });
     return page;
