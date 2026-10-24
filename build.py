@@ -6,8 +6,11 @@
 用法：python3 build.py
 """
 import base64, csv, io, json, os, re, shutil, subprocess, sys
-from fontTools import subset
-from fontTools.ttLib import TTFont
+try:
+    from fontTools import subset
+    from fontTools.ttLib import TTFont
+except ImportError:
+    subset = TTFont = None
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, 'src')
@@ -32,12 +35,24 @@ def subset_font(path):
     buf = io.BytesIO(); f.flavor = 'woff2'; f.save(buf)
     return base64.b64encode(buf.getvalue()).decode()
 
+font_specs = [('WenKai', 'LXGWWenKai-Regular.ttf', 400), ('WenKai Display', 'LXGWWenKai-Medium.ttf', 500)]
+can_subset = subset is not None and all(os.path.exists(os.path.join(FONT_DIR, fn)) for _, fn, _ in font_specs)
 fonts_css = ''
-for fam, fn, w in [('WenKai', 'LXGWWenKai-Regular.ttf', 400), ('WenKai Display', 'LXGWWenKai-Medium.ttf', 500)]:
-    b64 = subset_font(os.path.join(FONT_DIR, fn))
-    fonts_css += "@font-face{font-family:'%s';src:url(data:font/woff2;base64,%s) format('woff2');font-weight:%d;font-display:swap}\n" % (fam, b64, w)
-    if fam == 'WenKai Display':
-        fonts_css += "@font-face{font-family:'WenKai';src:url(data:font/woff2;base64,%s) format('woff2');font-weight:500 700;font-display:swap}\n" % b64
+if can_subset:
+    for fam, fn, w in font_specs:
+        b64 = subset_font(os.path.join(FONT_DIR, fn))
+        fonts_css += "@font-face{font-family:'%s';src:url(data:font/woff2;base64,%s) format('woff2');font-weight:%d;font-display:swap}\n" % (fam, b64, w)
+        if fam == 'WenKai Display':
+            fonts_css += "@font-face{font-family:'WenKai';src:url(data:font/woff2;base64,%s) format('woff2');font-weight:500 700;font-display:swap}\n" % b64
+else:
+    # 发布机没有 fontTools 或原始字体时，复用上一次正式构建已经内嵌的字体。
+    existing_index = os.path.join(HERE, 'index.html')
+    existing = open(existing_index, encoding='utf-8').read() if os.path.exists(existing_index) else ''
+    match = re.search(r'<style>((?:@font-face\{.*?\}\s*)+)</style>', existing, re.S)
+    if not match:
+        raise RuntimeError('缺少字体工具、字体源文件，且现有 index.html 中没有可复用的内嵌字体')
+    fonts_css = match.group(1)
+    print('复用现有页面中的内嵌字体')
 
 # 配音与音乐
 audio_dir = os.path.join(HERE, 'audio')

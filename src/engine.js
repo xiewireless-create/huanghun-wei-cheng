@@ -47,18 +47,28 @@
 
   /* ───── 布局：16:9 画框 ───── */
   var root = document.documentElement;
+  var portraitAllowed = false;
   function layout() {
     var vw = window.innerWidth, vh = window.innerHeight;
     var portrait = vh > vw * 1.15 && vw < 900;
+    var mobileLandscape = !portrait && vw > vh && vh <= 500 && vw <= 960;
     document.body.classList.toggle('portrait', portrait);
+    document.body.classList.toggle('mobile-landscape', mobileLandscape);
+    document.body.classList.toggle('portrait-allowed', portraitAllowed);
     var fw, fh, fx, fy;
     if (portrait) { fw = vw; fh = vw * 9 / 16; fx = 0; fy = 56; }
     else { fw = Math.min(vw, vh * 16 / 9); fh = fw * 9 / 16; fx = (vw - fw) / 2; fy = (vh - fh) / 2; }
     root.style.setProperty('--fw', fw + 'px'); root.style.setProperty('--fh', fh + 'px');
     root.style.setProperty('--fx', fx + 'px'); root.style.setProperty('--fy', fy + 'px');
     document.body.classList.toggle('short', !portrait && fh < 520);
+    var gate = $('#rotate-gate');
+    if (gate) gate.setAttribute('aria-hidden', String(!portrait || portraitAllowed));
   }
   window.addEventListener('resize', layout); layout();
+  $('#rotate-continue').addEventListener('click', function () {
+    portraitAllowed = true;
+    layout();
+  });
 
   /* ───── 状态 ───── */
   var st = null;            // 当前周目

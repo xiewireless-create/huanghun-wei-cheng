@@ -541,3 +541,71 @@ body.portrait #title .cont { top: auto; right: auto; left: 50%; transform: trans
 .chap .intro { max-width: 34em; }
 
 .chap { max-width: min(62em, 94vw); }
+
+/* ═════════ v0.4：手机横屏优先 ═════════ */
+#rotate-gate { display: none; position: fixed; inset: 0; z-index: 100;
+  align-items: center; justify-content: center; box-sizing: border-box;
+  padding: max(24px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px))
+    max(24px, env(safe-area-inset-bottom, 0px)) max(24px, env(safe-area-inset-left, 0px));
+  background: radial-gradient(circle at 50% 35%, #34271f 0%, var(--ink) 68%); }
+body.portrait:not(.portrait-allowed) #rotate-gate { display: flex; }
+.rotate-card { width: min(330px, 100%); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.rotate-card h2 { margin: 4px 0 0; font-family: var(--f-display); font-size: 30px; font-weight: 500; letter-spacing: .18em; padding-left: .18em; }
+.rotate-card p { margin: 0; color: var(--muted-on-ink); font-size: 15px; line-height: 1.8; }
+.rotate-card button { min-height: 44px; margin-top: 6px; padding: 0 20px; border: 1px solid rgba(243,229,204,.35); border-radius: 999px;
+  background: transparent; color: var(--paper); font-family: var(--f-ui); font-size: 14px; }
+.rotate-phone { width: 72px; height: 44px; border: 2px solid var(--dusk); border-radius: 10px; position: relative;
+  animation: rotatehint 2.4s ease-in-out infinite; }
+.rotate-phone::before { content: ""; position: absolute; right: 5px; top: 50%; width: 4px; height: 4px; border-radius: 50%; background: var(--dusk); transform: translateY(-50%); }
+.rotate-phone span { position: absolute; left: -17px; top: -17px; width: 25px; height: 25px; border: 1px solid transparent; border-top-color: var(--paper); border-radius: 50%; transform: rotate(-35deg); }
+.rotate-phone span::after { content: ""; position: absolute; right: -2px; top: 1px; border-left: 5px solid var(--paper); border-top: 3px solid transparent; border-bottom: 3px solid transparent; transform: rotate(42deg); }
+@keyframes rotatehint { 0%, 20%, 100% { transform: rotate(0); } 48%, 78% { transform: rotate(-8deg); } }
+
+/* 用户主动选择竖屏继续时，允许降级版自然换行和局部滚动。 */
+body.portrait.portrait-allowed .u { white-space: normal; }
+body.portrait.portrait-allowed .page { overflow-y: auto; overscroll-behavior: contain; }
+
+/* 仅命中手机横屏；桌面端不进入此状态。 */
+body.mobile-landscape { --fs: clamp(13px, 3.6vh, 16px); }
+body.mobile-landscape #bar { top: max(6px, env(safe-area-inset-top, 0px)); right: max(8px, env(safe-area-inset-right, 0px)); gap: 5px; }
+body.mobile-landscape #bar button { min-height: 44px; min-width: 44px; padding: 0 10px; font-size: 12px; line-height: 1; }
+body.mobile-landscape #pov { left: max(calc(var(--fx) + 10px), calc(env(safe-area-inset-left, 0px) + 8px));
+  top: max(calc(var(--fy) + 8px), env(safe-area-inset-top, 0px)); }
+body.mobile-landscape #call { top: max(calc(var(--fy) + 8px), env(safe-area-inset-top, 0px)); min-height: 28px; box-sizing: border-box; }
+body.mobile-landscape #hud { top: calc(var(--fy) + var(--fh) * .58); height: calc(var(--fh) * .42); }
+body.mobile-landscape .dlg { padding-left: max(calc(var(--fs) * 1.4), calc(env(safe-area-inset-left, 0px) + 12px));
+  padding-right: max(calc(var(--fs) * 1.4), calc(env(safe-area-inset-right, 0px) + 12px)); }
+body.mobile-landscape .dlg.say { margin: 0 max(3%, env(safe-area-inset-right, 0px)) max(8px, env(safe-area-inset-bottom, 0px)) max(3%, env(safe-area-inset-left, 0px));
+  padding-top: calc(var(--fs) * 1.05); padding-bottom: calc(var(--fs) * .65); min-height: calc(var(--fs) * 3.7); max-height: 92%; overflow-y: auto; }
+body.mobile-landscape .dlg.think { margin: 0 max(5%, env(safe-area-inset-right, 0px)) max(8px, env(safe-area-inset-bottom, 0px)) max(5%, env(safe-area-inset-left, 0px));
+  min-height: 0; max-height: 90%; overflow-y: auto; }
+body.mobile-landscape .dlg.narr { padding-bottom: max(calc(var(--fs) * 1.1), calc(env(safe-area-inset-bottom, 0px) + 8px)); }
+body.mobile-landscape #choice { padding: max(50px, calc(env(safe-area-inset-top, 0px) + 46px))
+  max(5%, calc(env(safe-area-inset-right, 0px) + 12px))
+  max(10px, env(safe-area-inset-bottom, 0px))
+  max(5%, calc(env(safe-area-inset-left, 0px) + 12px)); gap: calc(var(--fs) * .5); }
+body.mobile-landscape #choice .q { font-size: calc(var(--fs) * 1.12); }
+body.mobile-landscape #choice .opts { gap: calc(var(--fs) * .35); max-height: 100%; overflow-y: auto; }
+body.mobile-landscape #choice .opt { min-height: 44px; box-sizing: border-box; padding: .5em .9em; line-height: 1.35; }
+body.mobile-landscape #btnwrap { padding-inline: max(env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px)); box-sizing: border-box; }
+body.mobile-landscape #btnwrap button, body.mobile-landscape .acts button, body.mobile-landscape .leaflet button { min-height: 44px; }
+body.mobile-landscape #phone { top: max(calc(var(--fy) + 8px), calc(env(safe-area-inset-top, 0px) + 4px));
+  height: min(calc(var(--fh) - 16px), calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 8px));
+  width: clamp(230px, 34vw, 280px); right: max(calc(100vw - var(--fx) - var(--fw) + 8px), env(safe-area-inset-right, 0px)); }
+body.mobile-landscape.sms #choice { width: calc(var(--fw) - clamp(230px, 34vw, 280px) - var(--fw) * .04); }
+body.mobile-landscape .modal { padding: max(10px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px))
+  max(10px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); }
+body.mobile-landscape .leaflet { padding: 18px 22px 14px; gap: 10px; }
+body.mobile-landscape .leaflet p { font-size: 15px; line-height: 1.7; }
+body.mobile-landscape #log .sheet { max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 16px); }
+body.mobile-landscape #memo .drawer { padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+
+@media (max-height: 390px) and (orientation: landscape) {
+  body.mobile-landscape #title .side { padding-bottom: max(4%, env(safe-area-inset-bottom, 0px)); }
+  body.mobile-landscape #title .side .go { margin-top: 4px; }
+  body.mobile-landscape #title .head { top: calc(var(--fy) + var(--fh) * .04); }
+  body.mobile-landscape #title .head h1 { font-size: calc(var(--fs) * 3); }
+  body.mobile-landscape .chap { gap: 8px; }
+  body.mobile-landscape .chap .tt { font-size: clamp(26px, 8vh, 36px); }
+  body.mobile-landscape .chap .intro { margin-top: 2px; font-size: 14px; line-height: 1.65; }
+}
